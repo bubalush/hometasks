@@ -1,6 +1,6 @@
 word = 'noon'
 a = word[::-1]
 if word == a:
-    print ("Polindrom")
+    print ("Palindrom")
 else:
-    print ("no")
+    print ("Not palindrom")
