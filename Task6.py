@@ -50,6 +50,7 @@ class Jsonsuper(Data):
 i=1
 a, b =Iniconfig.get('conf.ini')
 
+
 while True:
     if b == 'json':
         try:
