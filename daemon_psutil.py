@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 import os
 import daemon
-
+import daemon.pidfile
 
 
 class App():
@@ -82,7 +82,7 @@ class DaemonRunner():
         # w+ -> wb+
         self.daemon_context.stderr = open(
             app.stderr_path, 'wb+', buffering=0)
-        self.daemon_context.pidfile=open(app.pidfile_path)
+        self.daemon_context.pidfile=daemon.pidfile.PIDLockFile('/home/student/PycharmProjects/python2017/psutil.pid')
         self.daemon_context.working_directory='/home/student/PycharmProjects/python2017'
     def run(self):
         self.daemon_context.open()
