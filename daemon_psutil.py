@@ -4,15 +4,16 @@ import psutil
 from datetime import datetime
 import time
 import os
-from daemon import runner
+import daemon
 
 
-class App:
+
+class App():
     def __init__(self):
         self.stdin_path = '/dev/null'
-        self.stdout_path = '/dev/tty'
-        self.stderr_path = '/dev/tty'
-        self.pidfile_path = '/tmp/psutil_script.pid'
+        self.stdout_path = '/home/student/PycharmProjects/python2017/psutil.log'
+        self.stderr_path = '/home/student/PycharmProjects/python2017/psutil.log'
+        self.pidfile_path = '/home/student/PycharmProjects/python2017/psutil.pid'
         self.pidfile_timeout = 5
     def run(self):
         while True:
@@ -69,10 +70,33 @@ class App:
                 break
             time.sleep(a)
 
+class DaemonRunner():
+    def __init__(self, app):
 
-app=App()
-daemon_runner=runner.DaemonRunner(app)
-daemon_runner.do_action()
+        self.app = app
+        self.daemon_context = daemon.DaemonContext()
+        self.daemon_context.umask=0o002
+        self.daemon_context.stdin = open(app.stdin_path, 'r')
+        # for linux /dev/tty must be opened without buffering and with b
+        self.daemon_context.stdout = open(app.stdout_path, 'wb+', buffering=0)
+        # w+ -> wb+
+        self.daemon_context.stderr = open(
+            app.stderr_path, 'wb+', buffering=0)
+        self.daemon_context.pidfile=open(app.pidfile_path)
+        self.daemon_context.working_directory='/home/student/PycharmProjects/python2017'
+    def run(self):
+        self.daemon_context.open()
+        self.app.run()
+
+
+app = App()
+daemon_runner = DaemonRunner(app)
+daemon_runner.run()
+
+
+
+
+
 
 
 
