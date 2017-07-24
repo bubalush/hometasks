@@ -7,7 +7,6 @@ import os
 import daemon
 import daemon.pidfile
 
-
 class App():
     def __init__(self):
         self.stdin_path = '/dev/null'
@@ -72,14 +71,11 @@ class App():
 
 class DaemonRunner():
     def __init__(self, app):
-
         self.app = app
         self.daemon_context = daemon.DaemonContext()
         self.daemon_context.umask=0o002
         self.daemon_context.stdin = open(app.stdin_path, 'r')
-        # for linux /dev/tty must be opened without buffering and with b
         self.daemon_context.stdout = open(app.stdout_path, 'wb+', buffering=0)
-        # w+ -> wb+
         self.daemon_context.stderr = open(
             app.stderr_path, 'wb+', buffering=0)
         self.daemon_context.pidfile=daemon.pidfile.PIDLockFile('/home/student/PycharmProjects/python2017/psutil.pid')
@@ -87,7 +83,6 @@ class DaemonRunner():
     def run(self):
         self.daemon_context.open()
         self.app.run()
-
 
 app = App()
 daemon_runner = DaemonRunner(app)
